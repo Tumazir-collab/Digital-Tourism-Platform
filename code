@@ -1,0 +1,529 @@
+//CLASS FOR LOGIN
+package tourism.plateform;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+/**
+ *
+ * @author SP23-BSE-049
+ *
+ */
+
+public class Login {
+    private final List<Customer> customers = new ArrayList<>();
+
+    // Method to add a new customer to the list
+    public void addCustomer(Customer customer) {
+        customers.add(customer);
+    }
+
+    // Method to authenticate a customer based on username and password
+    public Customer authenticate(String username, String password) {
+        for (Customer customer : customers) {
+            if (customer.getUsername().equals(username) && customer.getPassword().equals(password)) {
+                return customer;
+            }
+        }
+        return null;
+    }
+
+    // Method to get all customers
+    public List<Customer> getCustomers() {
+        return customers;
+    }
+
+    public static void main(String[] args) {
+        Login login = new Login();
+        try (Scanner scanner = new Scanner(System.in)) {
+
+            System.out.println("Are you a new user? (yes/no)");
+            String response = scanner.nextLine();
+
+            if (response.equalsIgnoreCase("yes")) {
+                System.out.println("Enter username:");
+                String username = scanner.nextLine();
+                System.out.println("Enter password:");
+                String password = scanner.nextLine();
+                System.out.println("Enter security question:");
+                String securityQuestion = scanner.nextLine();
+                
+
+                // Creating a new Customer object
+                Customer newCustomer = new Customer(username, password, securityQuestion);
+                login.addCustomer(newCustomer);
+                System.out.println("Sign up successful. Please log in.");
+            }
+
+            System.out.println("Enter username:");
+            String username = scanner.nextLine();
+            System.out.println("Enter password:");
+            String password = scanner.nextLine();
+
+            // Authenticating the customer
+            Customer customer = login.authenticate(username, password);
+            if (customer != null) {
+                System.out.println("Login successful!");
+            } else {
+                System.out.println("Login failed. Incorrect username or password.");
+            }
+        } catch (Exception e) {
+            System.err.println("An error occurred: " + e.getMessage());
+        }
+    }
+
+    // Placeholder methods to avoid compilation errors
+    void deleteCustomer(Customer customer) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+}
+//CLASS FOR TAKING DETAILS FROM CUSTOMER
+package tourism.plateform;
+
+import java.util.Scanner;
+/**
+ *
+ * @author SP23-BSE-049
+ *
+ */
+
+public class AddCustomer {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Login login = new Login();
+
+        try {
+            // Prompting user for customer details
+            System.out.println("Enter username:");
+            String username = scanner.nextLine();
+            System.out.println("Enter password:");
+            String password = scanner.nextLine();
+            System.out.println("Enter security question:");
+            String securityQuestion = scanner.nextLine();
+            System.out.println("Enter security answer:");
+            String securityAnswer = scanner.nextLine();
+            System.out.println("Enter full name:");
+            String fullName = scanner.nextLine();
+            System.out.println("Enter email:");
+            String email = scanner.nextLine();
+            System.out.println("Enter phone number:");
+            String phoneNumber = scanner.nextLine();
+            System.out.println("Enter address:");
+            String address = scanner.nextLine();
+
+            // Creating new Customer object
+            Customer newCustomer = new Customer(username, password, securityQuestion, securityAnswer, fullName, email, phoneNumber, address);
+            
+            // Adding the new customer to the login system
+            login.addCustomer(newCustomer);
+            System.out.println("Customer added successfully.");
+        } catch (Exception e) {
+            // Handling any exceptions that occur during the process
+            System.err.println("An error occurred while adding the customer: " + e.getMessage());
+        } finally {
+            // Ensuring the scanner is closed to avoid resource leaks
+            if (scanner != null) {
+                scanner.close();
+            }
+        }
+    }
+}
+//CLASS FOR VIEWING CUSTOMER DETAILS AS IT IS HIS PROFILE
+package tourism.plateform;
+
+import java.util.List;
+import java.util.Scanner;
+
+/**
+ *
+ * @author SP23-BSE-049
+ *
+ */
+public class ViewCustomer {
+    public static void main(String[] args) {
+        Login login = new Login();
+        try (Scanner scanner = new Scanner(System.in) // Ensure the scanner is closed to prevent resource leaks
+        ) {
+
+            // Adding some customers for demonstration purposes
+            login.addCustomer(new Customer("user1", "password123", "What is your favorite color?", "blue", "User One", "user1@example.com", "1234567890", "Address 1"));
+            login.addCustomer(new Customer("user2", "abc@123", "What is your pet's name?", "fluffy", "User Two", "user2@example.com", "0987654321", "Address 2"));
+
+            // Retrieve and display all customer details
+            System.out.println("All customer details:");
+            List<Customer> customers = login.getCustomers();
+            for (Customer customer : customers) {
+                System.out.println("Username: " + customer.getUsername());
+                System.out.println("Full Name: " + customer.getFullName());
+                System.out.println("Email: " + customer.getEmail());
+                System.out.println("Phone Number: " + customer.getPhoneNumber());
+                System.out.println("Address: " + customer.getAddress());
+                System.out.println("==================================");
+            }
+        } catch (Exception e) {
+            // Print the error message for debugging purposes
+            System.err.println("An error occurred: " + e.getMessage());
+        }
+    }
+}
+//CLASS FOR CHECKING HOTEL DETAILS
+package tourism.platform;
+
+import java.util.ArrayList;
+import java.util.List;
+/**
+ *
+ * @author SP23-BSE-049
+ *
+ */
+
+interface Hotel {
+    String getHotelDetails();
+}
+
+class HotelDetails implements Hotel {
+    private final String hotelName;
+    private final String location;
+    private final double pricePerNight;
+
+    public HotelDetails(String hotelName, String location, double pricePerNight) {
+        this.hotelName = hotelName;
+        this.location = location;
+        this.pricePerNight = pricePerNight;
+    }
+
+    @Override
+    public String getHotelDetails() {
+        return "Hotel: " + hotelName + ", Location: " + location + ", Price per night: $" + pricePerNight;
+    }
+}
+
+public class ViewHotels {
+    private final List<Hotel> hotels = new ArrayList<>();
+
+    public void addHotel(Hotel hotel) {
+       hotels.add(hotel);
+    }
+
+    public List<Hotel> getHotels() {
+        return hotels;
+    }
+
+    public static void main(String[] args) {
+        ViewHotels viewHotels = new ViewHotels();
+
+        // Adding some hotels for demonstration
+        viewHotels.addHotel(new HotelDetails("Ocean View", "Miami Beach", 19999));
+        viewHotels.addHotel(new HotelDetails("Mountain Retreat", "Aspen", 29999));
+
+        System.out.println("Available hotels:");
+        for (Hotel hotel : viewHotels.getHotels()) {
+            System.out.println(hotel.getHotelDetails());
+        }
+    }
+}
+//CLASS FOR CHECKING TRANSPORT AVAILABILITY
+package tourism.plateform;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ *
+ * @author SP23-BSE-049
+ *
+ */
+interface Transport {
+    String getTransportDetails();
+}
+
+class TransportDetails implements Transport {
+    private final String transportType;
+    private final String provider;
+    private final double price;
+
+    public TransportDetails(String transportType, String provider, double price) {
+        this.transportType = transportType;
+        this.provider = provider;
+        this.price = price;
+    }
+
+    @Override
+    public String getTransportDetails() {
+        return "Transport: " + transportType + ", Provider: " + provider + ", Price: $" + price;
+    }
+}
+
+public class ViewTransport {
+    private List<Transport> transports = new ArrayList<>();
+
+    public void addTransport(Transport transport) {
+        transports.add(transport);
+    }
+
+    public List<Transport> getTransports() {
+        return transports;
+    }
+
+    public static void main(String[] args) {
+        ViewTransport viewTransport = new ViewTransport();
+
+        // Adding some transports for demonstration
+        viewTransport.addTransport(new TransportDetails("Car Rental", "Hertz", 49.99));
+        viewTransport.addTransport(new TransportDetails("Airport Shuttle", "SuperShuttle", 19.99));
+
+        System.out.println("Available transports:");
+        for (Transport transport : viewTransport.getTransports()) {
+            System.out.println(transport.getTransportDetails());
+        }
+    }
+}
+//CLASS FOR TO CHECK ALL THE PACKAGES AVAILABLE FOR BOOKING 
+package tourism.plateform;
+import java.util.ArrayList;
+import java.util.List;
+/**
+ *
+ * @author SP23-BSE-049
+ *
+ */
+interface Package {
+    String getPackageDetails();
+}
+
+class TourPackage implements Package {
+    private final String packageName;
+    private final String description;
+    private final double price;
+
+    public TourPackage(String packageName, String description, double price) {
+        this.packageName = packageName;
+        this.description = description;
+        this.price = price;
+    }
+
+    @Override
+    public String getPackageDetails() {
+        return "Package: " + packageName + ", Description: " + description + ", Price: $" + price;
+    }
+
+    Object getPackageName() {
+        throw new UnsupportedOperationException("Not supported yet."); // 
+    }
+}
+
+public class CheckPackage {
+    private final List<Package> packages = new ArrayList<>();
+
+    public void addPackage(Package tourPackage) {
+        packages.add(tourPackage);
+    }
+
+    public List<Package> getPackages() {
+        return packages;
+    }
+
+    public static void main(String[] args) {
+        CheckPackage checkPackage = new CheckPackage();
+
+        // Adding some packages for demonstration
+        checkPackage.addPackage(new TourPackage("Beach Vacation", "A relaxing beach vacation", 499.99));
+        checkPackage.addPackage(new TourPackage("Mountain Adventure", "An exciting mountain adventure", 599.99));
+
+        System.out.println("Available packages:");
+        for (Package tourPackage : checkPackage.getPackages()) {
+            System.out.println(tourPackage.getPackageDetails());
+        }
+    }
+
+    void addTourPackage(TourPackage tourPackage) {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
+
+    TourPackage findPackageByName(String packageName) {
+        throw new UnsupportedOperationException("Not supported yet."); // 
+    }
+}
+//CLASS FOR BOOKING HOTEL PACKAGE
+package tourism.plateform;
+
+import java.util.Scanner;
+
+/**
+ *
+ * @author SP23-BSE-049
+ *
+ */
+public class BookPackage {
+    private final CheckPackage checkPackage;
+
+    /**
+     * Constructor to initialize BookPackage with a CheckPackage object.
+     * @param checkPackage The CheckPackage object to use for package checking.
+     */
+    public BookPackage(CheckPackage checkPackage) {
+        this.checkPackage = checkPackage;
+    }
+
+    /**
+     * Method to book a package by its name.
+     * @param packageName The name of the package to book.
+     */
+    public void bookPackage(String packageName) {
+        TourPackage tourPackage = checkPackage.findPackageByName(packageName);
+        if (tourPackage != null) {
+            System.out.println("Booking package: " + tourPackage.getPackageName());
+            // Add more booking logic here
+        } else {
+            System.out.println("Package not found: " + packageName);
+        }
+    }
+
+    public static void main(String[] args) {
+        // Create a CheckPackage object and add some tour packages
+        CheckPackage checkPackage = new CheckPackage();
+        checkPackage.addTourPackage(new TourPackage("Package 1", "Description 1", 100.0));
+        checkPackage.addTourPackage(new TourPackage("Package 2", "Description 2", 200.0));
+
+        // Create a BookPackage object
+        BookPackage bookPackage = new BookPackage(checkPackage);
+
+        try (Scanner scanner = new Scanner(System.in)) {
+            // Prompt the user to enter the package name to book
+            System.out.println("Enter the package name to book:");
+            String packageName = scanner.nextLine();
+            
+            // Book the package
+            bookPackage.bookPackage(packageName);
+        } catch (Exception e) {
+            // Print the error message for debugging purposes
+            System.err.println("An error occurred: " + e.getMessage());
+        } finally {
+            // Perform cleanup tasks, if any
+        }
+    }
+}
+//CLASS TO UPDATE THE PROFILE OF CUSTOMER
+package tourism.plateform;
+
+import java.util.Scanner;
+/**
+ *
+ * @author SP23-BSE-049
+ *
+ */
+
+public class UpdateDetails {
+    /**
+     * Main method to update customer details.
+     * 
+     * @param args
+     */
+    public static void main(String[] args) {
+        Login login = new Login();
+        try (Scanner scanner = new Scanner(System.in)) {
+            
+            // Prompt user for username and password
+            System.out.println("Enter your username:");
+            String username = scanner.nextLine();
+            System.out.println("Enter your password:");
+            String password = scanner.nextLine();
+
+            // Authenticate the user
+            Customer customer = login.authenticate(username, password);
+            if (customer != null) {
+                System.out.println("Login successful! You can update your details.");
+
+                // Prompt for new details, with the option to leave blank to keep current details
+                System.out.println("Enter new full name (leave blank to keep current):");
+                String fullName = scanner.nextLine();
+                if (!fullName.isBlank()) {
+                    customer.setFullName(fullName);
+                }
+
+                System.out.println("Enter new email (leave blank to keep current):");
+                String email = scanner.nextLine();
+                if (!email.isBlank()) {
+                    customer.setEmail(email);
+                }
+
+                System.out.println("Enter new phone number (leave blank to keep current):");
+                String phoneNumber = scanner.nextLine();
+                if (!phoneNumber.isBlank()) {
+                    customer.setPhoneNumber(phoneNumber);
+                }
+
+                System.out.println("Enter new address (leave blank to keep current):");
+                String address = scanner.nextLine();
+                if (!address.isBlank()) {
+                    customer.setAddress(address);
+                }
+
+                System.out.println("Details updated successfully.");
+            } else {
+                System.out.println("Login failed. Incorrect username or password.");
+            }
+        } catch (Exception e) {
+            System.err.println("An error occurred: " + e.getMessage());
+        }
+    }
+}
+//A CLASS - AFTER BOOKING NOW USER CAN AGAIN CHECK PACKAGE
+
+package tourism.plateform;
+import java.util.Scanner;
+/**
+ *
+ * @author Tumazir
+ */
+public class ViewPackage {
+    public static void main(String[] args) {
+        CheckPackage checkPackage = new CheckPackage();
+
+        // Add some demo data
+        checkPackage.addPackage(new TourPackage("Beach Vacation", "A relaxing beach vacation", 499.99));
+        checkPackage.addPackage(new TourPackage("Mountain Adventure", "An exciting mountain adventure", 599.99));
+
+        System.out.println("Available packages:");
+        for (Package tourPackage : checkPackage.getPackages()) {
+            System.out.println(tourPackage.getPackageDetails());
+        }
+    }
+}
+    
+
+//CLASS FOR DELETING THE DETAILS OF PROFILE
+package tourism.plateform;
+import java.util.Scanner;
+/**
+ *
+ * @author SP23-BSE-049
+ *
+ */
+public class DeleteDetails {
+    public static void main(String[] args) {
+        Login login = new Login();
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            System.out.println("Enter your username:");
+            String username = scanner.nextLine();
+            System.out.println("Enter your password:");
+            String password = scanner.nextLine();
+
+            Customer customer = login.authenticate(username, password);
+            if (customer != null) {
+                login.deleteCustomer(customer);
+                System.out.println("Account deleted successfully.");
+            } else {
+                System.out.println("Login failed. Incorrect username or password.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            scanner.close();
+        }
+    }
+}
+  
+
